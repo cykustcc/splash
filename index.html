@@ -182,11 +182,11 @@ data/covtype.txt 20.0 &gt; output.txt
 <p>After the algorithm terminates (it takes 100 passes over the dataset), the output should be like:</p>
 
 <pre><code>Stochastic Gradient Descent
-Time = 1.853; Loss = 0.52334904; Selected Sample Weight = 16.000000
-Time = 2.884; Loss = 0.51751886; Selected Sample Weight = 16.000000
-Time = 3.730; Loss = 0.51641545; Selected Sample Weight = 16.000000
-Time = 4.859; Loss = 0.51497963; Selected Sample Weight = 16.000000
-Time = 5.719; Loss = 0.51593768; Selected Sample Weight = 16.000000
+Time = 2.009; Loss = 0.52323128; Selected Sample Weight = 64.000000
+Time = 3.248; Loss = 0.51843006; Selected Sample Weight = 64.000000
+Time = 4.281; Loss = 0.51754252; Selected Sample Weight = 64.000000
+Time = 5.642; Loss = 0.51812574; Selected Sample Weight = 64.000000
+Time = 6.645; Loss = 0.51664343; Selected Sample Weight = 64.000000
 ...
 </code></pre>
 
@@ -318,14 +318,14 @@ Time = 5.719; Loss = 0.51593768; Selected Sample Weight = 16.000000
 <td>Proportion of data processed per iteration.</td>
 </tr>
 <tr>
-<td>apply.adaptive.reweighting</td>
+<td>use.adaptive.weight</td>
 <td align="center">true</td>
 <td>If the value is <code>true</code>, the system will adaptively choose element weights.</td>
 </tr>
 <tr>
-<td>reweight</td>
+<td>weight</td>
 <td align="center">1.0</td>
-<td>If <code>apply.adaptive.reweighting = false</code>, then the element weights are chosen by <code>reweight</code>.</td>
+<td>If <code>use.adaptive.weight = false</code>, then the element weights are chosen by <code>weight</code>.</td>
 </tr>
 </tbody>
 </table>
