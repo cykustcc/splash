@@ -129,10 +129,10 @@ sharedVar.update(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="
 
 <p>After setting up the stream processing function, the user calls <code>streamProcess</code> to process the dataset using the stream processing function:</p>
 
-<div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">spc</span> <span class="pl-k">=</span> (<span class="pl-k">new</span> <span class="pl-en">StreamProcessContext).set</span>(<span class="pl-s"><span class="pl-pds">"</span>num.of.thread<span class="pl-pds">"</span></span>, paramRdd.partitions.length)
+<div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">spc</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">StreamProcessContext</span>
 paramRdd.streamProcess(spc)</pre></div>
 
-<p>The stream process context <code>spc</code> provides interfaces to control the learning process. The user can specify the number of parallel threads, the proportion of data to process per iteration, the strategy for combining parallel updates, etc. See the SPLASH API for more details. In this example, we adopt the system's default setting, but choosing the number of parallel threads to be equal to the number of RDD partitions. In the default setting, every element in the dataset is processed once by one call of <code>streamProcess</code>. In many machine learning applications, the user is recommended to call <code>streamProcess</code> multiple times to take multiple passes over the dataset, in order to obtain higher learning accuracy.</p>
+<p>The stream process context <code>spc</code> provides interfaces to control the learning process. The user can specify the number of parallel threads, the proportion of data to process per iteration, the strategy for combining parallel updates, etc. See the SPLASH API for more details. In this example, we adopt the system's default setting. In the default setting, every element in the dataset is processed once by one call of <code>streamProcess</code>. In many machine learning applications, the user is recommended to call <code>streamProcess</code> multiple times to take multiple passes over the dataset, in order to obtain higher learning accuracy.</p>
 
 <h2>
 <a id="output-and-evaluation" class="anchor" href="#output-and-evaluation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Output and Evaluation</h2>
@@ -182,15 +182,15 @@ data/covtype.txt 20.0 &gt; output.txt
 <p>After the algorithm terminates (it takes 100 passes over the dataset), the output should be like:</p>
 
 <pre><code>Stochastic Gradient Descent
-Time = 2.009; Loss = 0.52323128; Selected Sample Weight = 64.000000
-Time = 3.248; Loss = 0.51843006; Selected Sample Weight = 64.000000
-Time = 4.281; Loss = 0.51754252; Selected Sample Weight = 64.000000
-Time = 5.642; Loss = 0.51812574; Selected Sample Weight = 64.000000
-Time = 6.645; Loss = 0.51664343; Selected Sample Weight = 64.000000
+Time = 2.050; Loss = 0.51869426; Element Weight = 8
+Time = 3.132; Loss = 0.51618163; Element Weight = 8
+Time = 4.055; Loss = 0.51623291; Element Weight = 8
+Time = 5.243; Loss = 0.51706141; Element Weight = 8
+Time = 6.188; Loss = 0.51550459; Element Weight = 8
 ...
 </code></pre>
 
-<p>Each line corresponds to the outcome after an additional pass over the dataset. The three quantities are the total time elapsed, the average logistic loss and the adaptive sample weight chosen by the SPLASH system.</p>
+<p>Each line corresponds to the outcome after an additional pass over the dataset. The three quantities are the total time elapsed, the average logistic loss and the adaptive element weight chosen by the SPLASH system.</p>
 
 <h1>
 <a id="splash-api" class="anchor" href="#splash-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>SPLASH API</h1>
@@ -210,6 +210,10 @@ Time = 6.645; Loss = 0.51664343; Selected Sample Weight = 64.000000
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>this(rdd)</td>
+<td>Constructor. It returns a Parametrized RDD object constructed from <code>rdd</code>. There is an optional boolean argument <code>preservePartitions</code>. If <code>preservePartitions = true</code>, then the partitioning of <code>rdd</code> is preserved. Otherwise, the original RDD is repartitioned such that the number of partitions is equal to the number of available cores. The default value of <code>preservePartitions</code> is <code>false</code>.</td>
+</tr>
 <tr>
 <td>map(<em>func</em>)</td>
 <td>Return a RDD formed by mapping each element by function <code>func</code>. The function takes the element and the associated local/shared variables as input</td>
@@ -309,23 +313,18 @@ Time = 6.645; Loss = 0.51664343; Selected Sample Weight = 64.000000
 <tbody>
 <tr>
 <td>num.of.thread</td>
-<td align="center">1</td>
-<td>The number of parallel threads in stream processing.</td>
+<td align="center">0</td>
+<td>The number of parallel threads for stream processing. If <code>num.of.thread = 0</code>, then the number of parallel thread is equal to the number of partitions.</td>
+</tr>
+<tr>
+<td>weight</td>
+<td align="center">0</td>
+<td>The element weight used in stream processing. If <code>weight = 0</code>, then it will be automatically chosen.</td>
 </tr>
 <tr>
 <td>data.per.iteration</td>
 <td align="center">1.0</td>
 <td>Proportion of data processed per iteration.</td>
-</tr>
-<tr>
-<td>use.adaptive.weight</td>
-<td align="center">true</td>
-<td>If the value is <code>true</code>, the system will adaptively choose element weights.</td>
-</tr>
-<tr>
-<td>weight</td>
-<td align="center">1.0</td>
-<td>If <code>use.adaptive.weight = false</code>, then the element weights are chosen by <code>weight</code>.</td>
 </tr>
 </tbody>
 </table>
