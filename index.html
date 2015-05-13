@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>SPLASH by zhangyuc</title>
+    <title>Splash by zhangyuc</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,8 +11,8 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">SPLASH</h1>
-      <h2 class="project-tagline">Parallel Stochastic Learning on Spark</h2>
+      <h1 class="project-name">Splash</h1>
+      <h2 class="project-tagline">User-friendly Parallel Stochastic Learning on Spark</h2>
       <a href="https://github.com/zhangyuc/splash" class="btn">View on GitHub</a>
       <a href="https://github.com/zhangyuc/splash/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/zhangyuc/splash/tarball/master" class="btn">Download .tar.gz</a>
@@ -22,16 +22,31 @@
       <h1>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
 
-<p><strong>Stochastic algorithm</strong> processes a large-scale dataset by sequentially processing its random samples. Typical examples of stochastic algorithm include <strong>stochastic gradient descent</strong>, <strong>Gibbs sampling</strong> and <strong>stochastic variational inference</strong>. </p>
+<p><strong>Stochastic algorithm</strong> processes a large-scale dataset by sequentially processing its random samples. Typical examples of stochastic algorithm include <strong>stochastic gradient descent</strong>, <strong>Gibbs sampling</strong> and <strong>stochastic variational inference</strong>. On large-scale datasets, stochastic algorithms are typically order-of-magnitude faster than batch processing algoriths. Due to their sequential nature, stochastic algorithms are difficult to parallelize.</p>
 
-<p><img src="/images/sgd.png" alt="Logo"></p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/sgd.png" width="350"><br>
+<br>
+<br>
+</p>
 
-<p>SPLASH is a general-purpose tool for running stochastic algorithms on multi-node distributed systems. It provides a user-friendly interface for stochastic algorithm development. The main features of SPLASH are:</p>
+<p><strong>Splash</strong> is a user-friendly programming interface for developing stochastic algorithms. It is also an automatic engine for running these sequential algorithms on distributed systems. The main features of SPLASH are:</p>
 
 <ul>
-<li><p><strong>Ease of Use</strong>: Most stochastic algorithms can be immigrated to SPLASH for parallel execution without modification. The user writes code as if the program will be executed by a single-core processor. There is no need to devise a distributed implementation: the distributed implementation is automatically taken care of by the system. </p></li>
-<li><p><strong>Fast Performance</strong>: SPLASH workers won't synchronize until processing a large bulk of data. Thus, communication is not a bottleneck on the algorithm's efficiency. It makes SPLASH substantially faster than other parallel schemes which require frequent communication. SPLASH adopts novel strategies to resolve parallel processing conflicts, so that these conflicts don't hurt the algorithm's performance.</p></li>
-<li><p><strong>Integration with Apache Spark</strong>: SPLASH is built on <a href="https://spark.apache.org/">Apache Spark</a>. it takes the resilient distributed dataset (RDD) of Spark as input and generates RDD as output. In addition, it is seamlessly integrated with other data processing tools in the Spark environment, including the <a href="https://spark.apache.org/mllib/">MLlib machine learning library</a>. </p></li>
+<li><p><strong>Easy programming</strong>: User develop single-thread algorithms via Splash: no communication protocol, no conflict management, no data partitioning, no re-tunning hyper-parameters.</p></li>
+<li><p><strong>Fast Performance</strong>: Splash adopts novel strategies for automatic parallelization, so that communication is no longer a performance bottleneck. Splash allows lightening-fast learning on commercial distributed systems.</p></li>
+</ul>
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/bar-sgd.png" width="350">
+<img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/bar-svi.png" width="350">
+</p>
+
+<p><br></p>
+
+<ul>
+<li>
+<strong>Integration with Apache Spark</strong>: SPLASH is built on <a href="https://spark.apache.org/">Apache Spark</a>. it takes the resilient distributed dataset (RDD) of Spark as input and generates RDD as output. It works seamlessly with other data analysis tools in the Spark environment, including the <a href="https://spark.apache.org/mllib/">MLlib machine learning library</a>. </li>
 </ul>
 
 <h1>
@@ -332,7 +347,7 @@ Time = 6.188; Loss = 0.51550459; Element Weight = 8
 </table>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/zhangyuc/splash">SPLASH</a> is maintained by <a href="https://github.com/zhangyuc">zhangyuc</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/zhangyuc/splash">Splash</a> is maintained by <a href="https://github.com/zhangyuc">zhangyuc</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
