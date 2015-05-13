@@ -22,41 +22,37 @@
       <h1>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
 
-<p><strong>Stochastic algorithm</strong> processes a large-scale dataset by sequentially processing its random samples. Typical examples of stochastic algorithm include <strong>stochastic gradient descent</strong>, <strong>Gibbs sampling</strong> and <strong>stochastic variational inference</strong>. On large-scale datasets, stochastic algorithms are typically order-of-magnitude faster than batch processing algoriths. Due to their sequential nature, stochastic algorithms are difficult to parallelize.</p>
+<p><strong>Stochastic algorithm</strong> processes a large-scale dataset by sequentially processing its random samples. Typical examples of stochastic algorithm include <strong>stochastic gradient descent</strong>, <strong>Gibbs sampling</strong> and <strong>stochastic variational inference</strong>. On large-scale datasets, stochastic algorithms are typically order-of-magnitude faster than batch processing algorithms. </p>
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/sgd.png" width="350"><br>
-<br>
-<br>
 </p>
 
-<p><strong>Splash</strong> is a user-friendly programming interface for developing stochastic algorithms. It is also an automatic engine for running these sequential algorithms on distributed systems. The main features of SPLASH are:</p>
+<p><strong>Splash</strong> is a user-friendly programming interface for developing stochastic algorithms. It is also an automatic engine for running these sequential algorithms on distributed systems. The main features of Splash are:</p>
 
 <ul>
-<li><p><strong>Easy programming</strong>: User develop single-thread algorithms via Splash: no communication protocol, no conflict management, no data partitioning, no re-tunning hyper-parameters.</p></li>
-<li><p><strong>Fast Performance</strong>: Splash adopts novel strategies for automatic parallelization, so that communication is no longer a performance bottleneck. Splash allows lightening-fast learning on commercial distributed systems.</p></li>
+<li><p><strong>Easy programming</strong>: User develop single-thread algorithms via Splash: no communication protocol, no conflict management, no data partitioning, no hyper-parameter tunning.</p></li>
+<li><p><strong>Fast Performance</strong>: Splash adopts novel strategies for automatic parallelization, so that inter-machine communication is no longer a performance bottleneck. Splash allows lightening-fast learning on commercial distributed systems such as Amazon EC2.</p></li>
 </ul>
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/bar-sgd.png" width="350">
-<img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/bar-svi.png" width="350">
+<img src="https://raw.githubusercontent.com/zhangyuc/splash/gh-pages/images/bar-svi.png" width="350"><br>
 </p>
-
-<p><br></p>
 
 <ul>
 <li>
-<strong>Integration with Apache Spark</strong>: SPLASH is built on <a href="https://spark.apache.org/">Apache Spark</a>. it takes the resilient distributed dataset (RDD) of Spark as input and generates RDD as output. It works seamlessly with other data analysis tools in the Spark environment, including the <a href="https://spark.apache.org/mllib/">MLlib machine learning library</a>. </li>
+<strong>Integration with Apache Spark</strong>: Splash is built on <a href="https://spark.apache.org/">Apache Spark</a>. it takes the resilient distributed dataset (RDD) of Spark as input and generates RDD as output. It works seamlessly with other data analysis tools in the Spark environment, including the <a href="https://spark.apache.org/mllib/">MLlib machine learning library</a>. </li>
 </ul>
 
 <h1>
-<a id="install-splash" class="anchor" href="#install-splash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install SPLASH</h1>
+<a id="install-splash" class="anchor" href="#install-splash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Splash</h1>
 
-<p>To install SPLASH, you need to:</p>
+<p>To install Splash, you need to:</p>
 
 <ol>
 <li>Download and install <a href="http://www.scala-lang.org/index.html">scala</a>, <a href="http://www.scala-sbt.org/index.html">sbt</a> and <a href="https://spark.apache.org/">Apache Spark</a>.</li>
-<li>Download the <a href="https://github.com/zhangyuc/splash/blob/master/target/scala-2.10/splash_2.10-0.0.1.jar?raw=true">SPLASH jar file</a> and put it in your project classpath.</li>
+<li>Download the <a href="https://github.com/zhangyuc/splash/blob/master/target/scala-2.10/splash_2.10-0.0.1.jar?raw=true">Splash jar file</a> and put it in your project classpath.</li>
 <li>Make SPLASH as a dependency when <a href="http://spark.apache.org/docs/1.2.1/submitting-applications.html">submitting Spark jobs</a>.</li>
 </ol>
 
@@ -64,40 +60,37 @@
 <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Start</h1>
 
 <h2>
-<a id="import-splash" class="anchor" href="#import-splash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Import SPLASH</h2>
+<a id="import-splash" class="anchor" href="#import-splash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Import Splash</h2>
 
-<p>When SPLASH is in your project classpath, you can write a self-contained application using the SPLASH API. Besides importing Spark packages, you also need to import the SPLASH package in scala, by typing:</p>
+<p>When Splash is in your project classpath, you can write a self-contained application using the Splash API. Besides importing Spark packages, you also need to import the Splash package in scala, by typing:</p>
 
-<div class="highlight highlight-scala"><pre><span class="pl-k">import</span> <span class="pl-v">splash.</span><span class="pl-v">ParametrizedRDD</span>
-<span class="pl-k">import</span> <span class="pl-v">splash.</span><span class="pl-v">StreamProcessContext</span>
-<span class="pl-k">import</span> <span class="pl-v">splash.</span><span class="pl-v">ParameterSet</span></pre></div>
+<div class="highlight highlight-scala"><pre><span class="pl-k">import</span> <span class="pl-v">splash.</span><span class="pl-v">_</span></pre></div>
 
 <h2>
 <a id="create-dataset" class="anchor" href="#create-dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create Dataset</h2>
 
-<p>Just as every Spark applications, the first step is to create a dataset for the learning algorithm. SPLASH provides an abstraction called <strong>parametrized RDD</strong>. The parametrized RDD is very similar to the resilient distributed dataset (RDD) of Spark, but it has particular data structure for maintaining the parameters to be learnt. A parametrized RDD can be created by a standard RDD:</p>
+<p>Just as every Spark applications, the first step is to create a dataset for the learning algorithm. Splash provides an abstraction called <strong>parametrized RDD</strong>. The parametrized RDD is very similar to the resilient distributed dataset (RDD) of Spark, but it has particular data structure for maintaining the parameters to be learnt. A parametrized RDD can be created by a standard RDD:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">paramRdd</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ParametrizedRDD</span>(data)</pre></div>
 
 <p>where <code>data</code> is a standard RDD object containing your dataset. </p>
 
 <h2>
-<a id="define-stream-processing-function" class="anchor" href="#define-stream-processing-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Define Stream Processing Function</h2>
+<a id="define-data-processing-function" class="anchor" href="#define-data-processing-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Define Data Processing Function</h2>
 
-<p>To execute the learning algorithm on the dataset, set a stream processing function <code>update</code> to the parametrized RDD by</p>
+<p>To execute the learning algorithm on the dataset, set a data processing function <code>process</code> to the parametrized RDD by</p>
 
 <div class="highlight highlight-scala"><pre>paramRdd.setProcessFunction(update)</pre></div>
 
-<p>The <code>update</code> function is implemented by the user. It takes four objects as input: a random seed, a weighted data element in the dataset, the set of shared variables used by the stochastic algorithm and the set of local variables associated with the data element. An exemplary implementation of the <strong>logistic regression</strong> update is:</p>
+<p>The <code>process</code> function is implemented by the user. It takes four objects as input: a random sample from the dataset, the weight of this sample, the set of shared variables used by the stochastic algorithm and the set of local variables associated with the data element. The <code>process</code> function should be able to process a sequence of weighted samples. <strong>The capability of processing weighted samples is mandatory</strong> even if the original data is unweighted. This is because that Splash will automatically assign non-trivial weights to random samples as a part of its parallelization strategy. An exemplary implementation for <strong>logistic regression</strong> update is:</p>
 
-<div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">update</span> <span class="pl-k">=</span> (<span class="pl-v">seed</span>: <span class="pl-en">Random</span>, <span class="pl-v">element</span>: (<span class="pl-k">Int</span>, <span class="pl-en">Array</span>[<span class="pl-k">String</span>], <span class="pl-en">Array</span>[<span class="pl-k">Double</span>]), <span class="pl-v">weight</span>: <span class="pl-k">Double</span>, <span class="pl-v">sharedVar</span>: <span class="pl-en">ParameterSet</span>, <span class="pl-v">localVar</span>: <span class="pl-en">ParameterSet</span> ) <span class="pl-k">=&gt;</span> {
+<div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">process</span> <span class="pl-k">=</span> (<span class="pl-v">element</span>: (<span class="pl-k">Int</span>, <span class="pl-en">Array</span>[<span class="pl-k">Int</span>], <span class="pl-en">Array</span>[<span class="pl-k">Double</span>]), <span class="pl-v">weight</span>: <span class="pl-k">Double</span>, <span class="pl-v">sharedVar</span> : <span class="pl-en">SharedVariableSet</span>,  <span class="pl-v">localVar</span>: <span class="pl-en">LocalVariableSet</span>) <span class="pl-k">=&gt;</span> {
   <span class="pl-k">val</span> <span class="pl-en">y</span> <span class="pl-k">=</span> element._1
   <span class="pl-k">val</span> <span class="pl-en">x_key</span> <span class="pl-k">=</span> element._2
   <span class="pl-k">val</span> <span class="pl-en">x_value</span> <span class="pl-k">=</span> element._3
-  <span class="pl-k">val</span> <span class="pl-en">learningRate</span> <span class="pl-k">=</span> <span class="pl-c1">20.0</span>
 
-  <span class="pl-c">// get the shared variable value by key "t"</span>
   <span class="pl-k">val</span> <span class="pl-en">t</span> <span class="pl-k">=</span> sharedVar.get(<span class="pl-s"><span class="pl-pds">"</span>t<span class="pl-pds">"</span></span>)
+  <span class="pl-k">val</span> <span class="pl-en">learningRate</span> <span class="pl-k">=</span> sharedVar.get(<span class="pl-s"><span class="pl-pds">"</span>learning.rate<span class="pl-pds">"</span></span>)
   <span class="pl-k">var</span> <span class="pl-en">sum</span> <span class="pl-k">=</span> <span class="pl-c1">0.0</span>
   <span class="pl-k">for</span>(i <span class="pl-k">&lt;</span><span class="pl-k">-</span> <span class="pl-c1">0</span> until x_key.length){
     <span class="pl-c">// get the shared variable value by key "w:"+x_key(i)</span>
@@ -106,25 +99,24 @@
 
   <span class="pl-k">for</span>(i <span class="pl-k">&lt;</span><span class="pl-k">-</span> <span class="pl-c1">0</span> until x_key.length)
   {
-    <span class="pl-k">val</span> <span class="pl-en">delta</span> <span class="pl-k">=</span> weight <span class="pl-k">*</span> learningRate <span class="pl-k">/</span> math.sqrt( t <span class="pl-k">+</span> <span class="pl-c1">1</span> ) <span class="pl-k">*</span> y  <span class="pl-k">/</span> (<span class="pl-c1">1.0</span> <span class="pl-k">+</span> math.exp(y<span class="pl-k">*</span>sum)) <span class="pl-k">*</span> x_value(i)
-
+    <span class="pl-k">val</span> <span class="pl-en">delta</span> <span class="pl-k">=</span> weight <span class="pl-k">*</span> learningRate <span class="pl-k">/</span> math.sqrt( t <span class="pl-k">+</span> <span class="pl-c1">1</span> ) <span class="pl-k">*</span> y <span class="pl-k">/</span> (<span class="pl-c1">1.0</span> <span class="pl-k">+</span> math.exp(y<span class="pl-k">*</span>sum)) <span class="pl-k">*</span> x_value(i)
     <span class="pl-c">// increase the shared variable by delta</span>
-    sharedVar.update(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span> <span class="pl-k">+</span> x_key(i), delta)
+    sharedVar.add(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span> <span class="pl-k">+</span> x_key(i), delta)
   }
   <span class="pl-c">// increase the shared variable by weight</span>
-  sharedVar.update(<span class="pl-s"><span class="pl-pds">"</span>t<span class="pl-pds">"</span></span>, weight)
+  sharedVar.add(<span class="pl-s"><span class="pl-pds">"</span>t<span class="pl-pds">"</span></span>, weight)
 }</pre></div>
 
-<p>in the above code <code>seed</code> is the random seed provided by the system. The data element <code>element</code> has three components: a binary label equal to -1 or 1, an array of feature indices and an array of feature values. The line of code</p>
+<p>in the above code, the data element <code>element</code> has three components: a binary label equal to -1 or 1, an array of feature indices and an array of feature values. The line of code</p>
 
 <div class="highlight highlight-scala"><pre>sum <span class="pl-k">+</span><span class="pl-k">=</span> sharedVar.get(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span><span class="pl-k">+</span>x_key(i)) <span class="pl-k">*</span> x_value(i)</pre></div>
 
-<p>accesses the weight associated with the feature index <code>x_key(i)</code> in order to compute a linear combination of feature values. Then the gradient of logistic loss with respect to this data element is computed, and stochastic gradient descent is applied to update the feature weights:</p>
+<p>accesses the weight associated with the feature index <code>x_key(i)</code>. These weights are used to compute a linear combination of feature values, and compute the the gradient of the logistic loss. Then, the shared vector is updated by taking a small step towards the opposite direction of the gradient. We make the stepsize proportional to the weight, which is the simplest way of processing weighted samples:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">delta</span> <span class="pl-k">=</span> weight <span class="pl-k">*</span> learningRate <span class="pl-k">/</span> math.sqrt( t <span class="pl-k">+</span> <span class="pl-c1">1</span> ) <span class="pl-k">*</span> y  <span class="pl-k">/</span> (<span class="pl-c1">1.0</span> <span class="pl-k">+</span> math.exp(y<span class="pl-k">*</span>sum)) <span class="pl-k">*</span> x_value(i)
-sharedVar.update(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span> <span class="pl-k">+</span> x_key(i), delta)</pre></div>
+sharedVar.add(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span> <span class="pl-k">+</span> x_key(i), delta)</pre></div>
 
-<p>There is another shared variable <code>t</code> counting the number of elements that have been processed. It controls the stepsize of stochastic gradient descent. Similarly, it is manipulated by calling the <code>get</code> and <code>update</code> function on the shared variable set.</p>
+<p>There is another shared variable <code>t</code> counting the number of elements. It controls the stepsize of stochastic gradient descent, making it decreasing to zero as more and more samples are processed. Similarly, it is updated by calling the <code>get</code> and <code>add</code> function.</p>
 
 <p>More generally, the value of local/shared variables are accessed by the <code>get</code> function by typing</p>
 
@@ -135,21 +127,21 @@ sharedVar.update(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="
 
 <div class="highlight highlight-scala"><pre>localVar.set(key,value)</pre></div>
 
-<p>while shared variables are updated by putting the incremental change:</p>
+<p>while shared variables can be updated by putting the incremental change:</p>
 
-<div class="highlight highlight-scala"><pre>sharedVar.update(key,delta)</pre></div>
+<div class="highlight highlight-scala"><pre>sharedVar.add(key,delta)</pre></div>
 
-<p>where <code>delta</code> is the difference between the new value and the old value. See the SPLASH API for more update options.</p>
+<p>where <code>delta</code> is the difference between the new value and the old value. Besides the <code>add</code> operation, Splash  provides many flexible ways to manipulate the shared variable. There are multiple supported types of shared variables as well. See the Splash API for more options.</p>
 
 <h2>
-<a id="stream-processing" class="anchor" href="#stream-processing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stream Processing</h2>
+<a id="running-the-algorithm" class="anchor" href="#running-the-algorithm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running the Algorithm</h2>
 
-<p>After setting up the stream processing function, the user calls <code>streamProcess</code> to process the dataset using the stream processing function:</p>
+<p>After setting up the processing function, the user calls <code>run</code> to start running the stochastic algorithm:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">spc</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">StreamProcessContext</span>
 paramRdd.streamProcess(spc)</pre></div>
 
-<p>The stream process context <code>spc</code> provides interfaces to control the learning process. The user can specify the number of parallel threads, the proportion of data to process per iteration, the strategy for combining parallel updates, etc. See the SPLASH API for more details. In this example, we adopt the system's default setting. In the default setting, every element in the dataset is processed once by one call of <code>streamProcess</code>. In many machine learning applications, the user is recommended to call <code>streamProcess</code> multiple times to take multiple passes over the dataset, in order to obtain higher learning accuracy.</p>
+<p>The stream process context <code>spc</code> provides interfaces to control the algorithm execution. The user can specify the number of parallel threads, the proportion of data to process per iteration, the strategy for combining parallel updates, etc. See the Splash API for more details. In this example, we use the system's default setting. In the default setting, the algorithm takes one pass over the dataset by one calling of <code>run</code>. In most machine learning applications, the user wants to call <code>run</code> multiple times to take multiple passes over the dataset, in order to obtain higher learning accuracy.</p>
 
 <h2>
 <a id="output-and-evaluation" class="anchor" href="#output-and-evaluation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Output and Evaluation</h2>
@@ -181,7 +173,7 @@ paramRdd.streamProcess(spc)</pre></div>
 <h2>
 <a id="try-logistic-regression-example" class="anchor" href="#try-logistic-regression-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Try Logistic Regression Example</h2>
 
-<p>To run the logistic regression example (with stochastic gradient descent), download the <a href="https://github.com/zhangyuc/splash/blob/master/examples/SplashExample.tar.gz?raw=true">SPLASH example</a> and extract it at any directory. The SPLASH library is included in the package, so you don't have to download it again. To run the code, <code>cd</code> into that directory, then compile the code by typing:</p>
+<p>To run the logistic regression example (with stochastic gradient descent), download the <a href="https://github.com/zhangyuc/splash/blob/master/examples/SplashExample.tar.gz?raw=true">Splash example</a> and extract it at any directory. The Splash library is included in the package, so you don't have to download it again. To run the code, <code>cd</code> into that directory, then compile the code by typing:</p>
 
 <pre><code>sbt package
 </code></pre>
@@ -199,18 +191,18 @@ data/covtype.txt 20.0 &gt; output.txt
 <p>After the algorithm terminates (it takes 100 passes over the dataset), the output should be like:</p>
 
 <pre><code>Stochastic Gradient Descent
-Time = 2.050; Loss = 0.51869426; Element Weight = 8
-Time = 3.132; Loss = 0.51618163; Element Weight = 8
-Time = 4.055; Loss = 0.51623291; Element Weight = 8
-Time = 5.243; Loss = 0.51706141; Element Weight = 8
-Time = 6.188; Loss = 0.51550459; Element Weight = 8
+Time = 1.569; Loss = 0.51655464; Group Number = 8
+Time = 2.479; Loss = 0.51724066; Group Number = 8
+Time = 3.205; Loss = 0.51601006; Group Number = 8
+Time = 4.165; Loss = 0.51608476; Group Number = 8
+Time = 4.838; Loss = 0.51621126; Group Number = 8
 ...
 </code></pre>
 
-<p>Each line corresponds to the outcome after an additional pass over the dataset. The three quantities are the total time elapsed, the average logistic loss and the adaptive element weight chosen by the SPLASH system.</p>
+<p>Each line corresponds to the outcome after an additional pass over the dataset. The three quantities are the total time elapsed, the average logistic loss and a hyper-parameter automatically chosen by the Splash executor. It stands for the number of groups in which the system cluster the parallel threads. Splash reweights elements in each group, aggregate incremental updates within the group, and average updates across groups. Although these implementation details are hidden from the user, the group number is usually helpful in monitoring the statues of the system.</p>
 
 <h1>
-<a id="splash-api" class="anchor" href="#splash-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>SPLASH API</h1>
+<a id="splash-api" class="anchor" href="#splash-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Splash API</h1>
 
 <p>In this section, we provide a brief description on the SPLASH API. </p>
 
@@ -249,7 +241,7 @@ Time = 6.188; Loss = 0.51550459; Element Weight = 8
 </tr>
 <tr>
 <td>syncSharedVariable()</td>
-<td>Synchronize the shared variable of all partitions. This operation often follows the execution of the four operations above.</td>
+<td>Synchronize the shared variable across all partitions. This operation often follows the execution of the above four operations. If the shared variables is manually changed but not synchronized, the change may not actually take effect.</td>
 </tr>
 <tr>
 <td>getFirstSharedVariable()</td>
@@ -261,27 +253,23 @@ Time = 6.188; Loss = 0.51550459; Element Weight = 8
 </tr>
 <tr>
 <td>setProcessFunction (<em>func</em>)</td>
-<td>Set the stream processing function. The function <code>func</code> takes a random seed, a weighted element and the associated local/shared variables. It performs update on the local/shared variables.</td>
-</tr>
-<tr>
-<td>setPostProcessFunction (<em>func</em>)</td>
-<td>Set the post-processing function. The function <code>func</code> takes a shared variable set after one iteration of stream processing, and performs post-processing on the shared variables.</td>
+<td>Set the data processing function. The function <code>func</code> takes an arbitrary element, the weight of the element and the associated local/shared variables. It performs update on the local/shared variables.</td>
 </tr>
 <tr>
 <td>setLossFunction(<em>func</em>)</td>
-<td>Set a loss function for the stochastic algorithm. The function <code>func</code> takes an element and the associated local/shared variables. It returns the loss incurred by this element.</td>
+<td>Set a loss function for the stochastic algorithm. The function <code>func</code> takes an element and the associated local/shared variables. It returns the loss incurred by this element. Setting a loss function for the algorithm is optional, but a reasonable loss function may help Splash choosing a better parallelization strategy.</td>
 </tr>
 <tr>
-<td>streamProcess(<em>spc</em>)</td>
-<td>Use the stream processing function to process the dataset. <code>spc</code> is a StreamProcessContext object. It includes configurations for the stream processing procedure.</td>
+<td>run(<em>spc</em>)</td>
+<td>Use the data processing function to process the dataset. <code>spc</code> is a StreamProcessContext object. It includes hyper-parameters for running the algorithm.</td>
 </tr>
 </tbody>
 </table>
 
 <h2>
-<a id="parameter-set-operations" class="anchor" href="#parameter-set-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parameter Set Operations</h2>
+<a id="shared-variable-set-operations" class="anchor" href="#shared-variable-set-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shared Variable Set Operations</h2>
 
-<p>Both the local variables and the shared variables are organized by a ParameterSet instance. There are operations for reading and writing the parameter set.</p>
+<p>All shared variables are organized as a SharedVariableSet instance. There are operations for reading and writing the shared variable set.</p>
 
 <table>
 <thead>
@@ -296,16 +284,48 @@ Time = 6.188; Loss = 0.51550459; Element Weight = 8
 <td>Return the value of the key.</td>
 </tr>
 <tr>
-<td>set(<em>key</em>,<em>value</em>)</td>
-<td>Put the value for the key.</td>
+<td>add(<em>key</em>, <em>delta</em>)</td>
+<td>Add <code>delta</code> to the value of the key.</td>
 </tr>
 <tr>
-<td>update (<em>key</em>,<em>delta</em>,<em>updateType</em>)</td>
-<td>Update the value of the key by increasing it by <code>delta</code>. The <code>updateType</code> argument is optional. It has default value <code>Push</code> and alternative value <code>Keep</code>. If <code>updateType = Push</code>, then the update will eventually be pushed to all partitions. Otherwise, the updated is kept only by the current partition.</td>
+<td>delayedAdd(<em>key</em>, <em>delta</em>)</td>
+<td>Same as <code>add</code>, but the operation will not be executed instantly. Instead, it will be executed at the next time the same element is processed. The delayed operation is useful for reversing a previous operation on the same element, or for passing information to the future.</td>
 </tr>
 <tr>
-<td>updateWithUnitWeight (<em>key</em>,<em>delta</em>,<em>updateType</em>)</td>
-<td>The same functionality as <code>update</code>, but the system will assume that the current element has unit weight.</td>
+<td>multiply(<em>key</em>, <em>gamma</em>)</td>
+<td>Multiply the value of the key by <code>gamma</code>.</td>
+</tr>
+<tr>
+<td>declareArray(<em>key</em>, <em>length</em>)</td>
+<td>Declare an array associated with the <code>key</code>. The <code>length</code> argument indicates the dimension of the array. The array has to be declared before manipulated. Generally speaking, manipulating an array of real numbers is faster than manipulating the same number of key-value pairs.</td>
+</tr>
+<tr>
+<td>getArray(<em>key</em>)</td>
+<td>Return the array associated with the key.</td>
+</tr>
+<tr>
+<td>getArrayElement(<em>key</em>, <em>ind</em>)</td>
+<td>Return the array element with index <code>ind</code>.</td>
+</tr>
+<tr>
+<td>addArray(<em>key</em>, <em>delta</em>)</td>
+<td>Add an array <code>delta</code> to the array associated with the key.</td>
+</tr>
+<tr>
+<td>addArrayElement (<em>key</em>, <em>ind</em>, <em>delta</em>)</td>
+<td>Add <code>delta</code> to the array element with index <code>ind</code>.</td>
+</tr>
+<tr>
+<td>delayedAddArray (<em>key</em>, <em>delta</em>)</td>
+<td>The same as <code>addArray</code>, but the operation will not be executed until the next time the same element is processed.</td>
+</tr>
+<tr>
+<td>delayedAddArrayElement (<em>key</em>, <em>delta</em>, <em>delta</em>)</td>
+<td>The same as <code>addArrayElement</code>, but the operation will not be executed until the next time the same element is processed.</td>
+</tr>
+<tr>
+<td>multiplyArray (<em>key</em>, <em>gamma</em>)</td>
+<td>Multiply all elements of the array by a real number <code>gamma</code>. The computation complexity of this operation is <strong>O(1)</strong>, independent of the dimension of the array.</td>
 </tr>
 </tbody>
 </table>
@@ -313,7 +333,7 @@ Time = 6.188; Loss = 0.51550459; Element Weight = 8
 <h2>
 <a id="stream-process-context" class="anchor" href="#stream-process-context" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stream Process Context</h2>
 
-<p>The Stream Process Context allows the user setting customized properties for the stream processing procedure. Given a Stream Process Context object <code>spc</code>, the properties are set by</p>
+<p>The Stream Process Context allows the user setting customized properties for the algorithm execution. Given a Stream Process Context object <code>spc</code>, the properties are set by</p>
 
 <div class="highlight highlight-scala"><pre>spc <span class="pl-k">=</span> spc.set(propertyName,propertyValue)</pre></div>
 
@@ -331,17 +351,22 @@ Time = 6.188; Loss = 0.51550459; Element Weight = 8
 <tr>
 <td>num.of.thread</td>
 <td align="center">0</td>
-<td>The number of parallel threads for stream processing. If <code>num.of.thread = 0</code>, then the number of parallel thread is equal to the number of partitions.</td>
+<td>The number of parallel threads for algorithm execution. If <code>num.of.thread = 0</code>, then the number of parallel thread is equal to the number of partitions.</td>
 </tr>
 <tr>
-<td>weight</td>
+<td>num.of.group</td>
 <td align="center">0</td>
-<td>The element weight used in stream processing. If <code>weight = 0</code>, then it will be automatically chosen.</td>
+<td>Indicate the number of groups that Splash clusters the parallel threads. It is a system-level parameter. If <code>num.of.group = 0</code>, then the group number will be automatically chosen.</td>
 </tr>
 <tr>
 <td>data.per.iteration</td>
 <td align="center">1.0</td>
-<td>Proportion of data processed per iteration.</td>
+<td>Proportion of data processed per one call of the <code>run</code> function.</td>
+</tr>
+<tr>
+<td>warmStart</td>
+<td align="center">true</td>
+<td>If <code>warmStart = true</code>, then at the first time the <code>run</code> function is called, the system will not execute parallel processing immediately. It will begin by running the algorithm sequentially on a small fraction of data as a warm start. This feature can be turned off by setting <code>warmStart = false</code>.</td>
 </tr>
 </tbody>
 </table>
