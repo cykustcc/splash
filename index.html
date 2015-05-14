@@ -82,7 +82,7 @@
 
 <div class="highlight highlight-scala"><pre>paramRdd.setProcessFunction(process)</pre></div>
 
-<p>The <code>process</code> function is implemented by the user. It takes four objects as input: a random sample from the dataset, the weight of this sample, the set of shared variables used by the stochastic algorithm and the set of local variables associated with the data element. Its functionality is to process the input to perform some update to the variables. The function should be able to process a sequence of weighted samples. <strong>The capability of processing weighted samples is mandatory</strong> even if the original data is unweighted. This is because that Splash will automatically assign non-trivial weights to random samples as a part of its parallelization strategy. An exemplary implementation for <strong>logistic regression</strong> is:</p>
+<p>The <code>process</code> function is implemented by the user. It takes four objects as input: a random sample from the dataset, the weight of this sample, the set of shared variables used by the stochastic algorithm and the set of local variables associated with the data element. Its functionality is to process the input to perform some update on the shared variables or on the local variables. The <code>process</code> function should be able to process a sequence of weighted samples. <strong>The capability of processing weighted samples is mandatory</strong> even if the original data is unweighted. This is because that Splash will automatically assign non-trivial weights to random samples as a part of its parallelization strategy. An exemplary implementation for <strong>logistic regression</strong> is:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">process</span> <span class="pl-k">=</span> (<span class="pl-v">element</span>: (<span class="pl-k">Int</span>, <span class="pl-en">Array</span>[<span class="pl-k">Int</span>], <span class="pl-en">Array</span>[<span class="pl-k">Double</span>]), <span class="pl-v">weight</span>: <span class="pl-k">Double</span>, <span class="pl-v">sharedVar</span> : <span class="pl-en">SharedVariableSet</span>,  <span class="pl-v">localVar</span>: <span class="pl-en">LocalVariableSet</span>) <span class="pl-k">=&gt;</span> {
   <span class="pl-k">val</span> <span class="pl-en">y</span> <span class="pl-k">=</span> element._1
@@ -111,14 +111,14 @@
 
 <div class="highlight highlight-scala"><pre>sum <span class="pl-k">+</span><span class="pl-k">=</span> sharedVar.get(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span><span class="pl-k">+</span>x_key(i)) <span class="pl-k">*</span> x_value(i)</pre></div>
 
-<p>accesses the weight associated with the feature index <code>x_key(i)</code>. These weights are used to compute a linear combination of feature values, and compute the the gradient of the logistic loss. Then, the shared vector is updated by taking a small step towards the opposite direction of the gradient. We make the stepsize proportional to the weight, which is the simplest way of processing weighted samples:</p>
+<p>reads the weight associated with the feature index <code>x_key(i)</code>. These weights are used to compute a linear combination of feature values, and compute the the gradient of the logistic loss. Then, the shared vector is updated by an <code>add</code> operator, taking a small step towards the opposite direction of the gradient. We make the stepsize proportional to <code>weight</code>. This is the simplest way of processing weighted samples. The related codes are:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">delta</span> <span class="pl-k">=</span> weight <span class="pl-k">*</span> learningRate <span class="pl-k">/</span> math.sqrt( t <span class="pl-k">+</span> <span class="pl-c1">1</span> ) <span class="pl-k">*</span> y  <span class="pl-k">/</span> (<span class="pl-c1">1.0</span> <span class="pl-k">+</span> math.exp(y<span class="pl-k">*</span>sum)) <span class="pl-k">*</span> x_value(i)
 sharedVar.add(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-pds">"</span></span> <span class="pl-k">+</span> x_key(i), delta)</pre></div>
 
-<p>There is another shared variable <code>t</code> counting the number of elements. It controls the stepsize of stochastic gradient descent, making it decreasing to zero as more and more samples are processed. Similarly, it is updated by calling the <code>get</code> and <code>add</code> function.</p>
+<p>There is another shared variable <code>t</code> counting the number of elements. It controls the stepsize of stochastic gradient descent, ensuring it decreasing to zero as more samples are processed. The sample weight is added to the counter after the sample is processed. Similarly, it is updated by calling the <code>get</code> operator and the <code>add</code> operator.</p>
 
-<p>More generally, the value of local/shared variables are accessed by the <code>get</code> function by typing</p>
+<p>More generally, the value of local/shared variables are accessed by the <code>get</code> operator:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">v1</span> <span class="pl-k">=</span> localVar.get(key)
 <span class="pl-k">val</span> <span class="pl-en">v2</span> <span class="pl-k">=</span> sharedVar.get(key)</pre></div>
@@ -131,7 +131,7 @@ sharedVar.add(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-
 
 <div class="highlight highlight-scala"><pre>sharedVar.add(key,delta)</pre></div>
 
-<p>where <code>delta</code> is the difference between the new value and the old value. Besides the <code>add</code> operation, Splash  provides many flexible ways to manipulate the shared variable. There are multiple supported types of shared variables as well. See the Splash API for more options.</p>
+<p>where <code>delta</code> is the difference between the new value and the old value. Besides the <code>add</code> operator, Splash  provides many flexible ways to manipulate the shared variable. There are multiple supported types of shared variables as well. See the Splash API for more options.</p>
 
 <h2>
 <a id="running-the-algorithm" class="anchor" href="#running-the-algorithm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running the Algorithm</h2>
@@ -207,7 +207,7 @@ Time = 4.838; Loss = 0.51621126; Group Number = 8
 <p>In this section, we provide a brief description on the Splash API. </p>
 
 <h2>
-<a id="parametrized-rdd-operations" class="anchor" href="#parametrized-rdd-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parametrized RDD Operations</h2>
+<a id="parametrized-rdd-operators" class="anchor" href="#parametrized-rdd-operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parametrized RDD Operators</h2>
 
 <p>The parametrized RDD provides a similar set of operations that are supported by Spark RDD. Since the parametrized RDD maintains local variables and shared variables, there are additional operations manipulating these data structures.</p>
 
@@ -267,9 +267,9 @@ Time = 4.838; Loss = 0.51621126; Group Number = 8
 </table>
 
 <h2>
-<a id="shared-variable-set-operations" class="anchor" href="#shared-variable-set-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shared Variable Set Operations</h2>
+<a id="shared-variable-set-operators" class="anchor" href="#shared-variable-set-operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shared Variable Set Operators</h2>
 
-<p>All shared variables are organized as a SharedVariableSet instance. There are operations for reading and writing the shared variable set.</p>
+<p>All shared variables are organized as a SharedVariableSet instance. There are operations for reading and writing the shared variable set. We list them in a table:</p>
 
 <table>
 <thead>
