@@ -198,7 +198,7 @@ Time = 3.505; Loss = 0.51591477; Group Number = 8
 ...
 </code></pre>
 
-<p>Each line corresponds to the outcome after an additional pass over the dataset. The first two quantities are the total time elapsed and the average logistic loss. The last quantity is a system-chosen parameter called <em>Group Number</em>. It stands for the number of groups that Splash clusters the parallel threads into. The parallelization strategy of Splash clusters the parallel threads into groups before aggregating their updates. Although this implementation detail is hidden from the user, the group number is helpful in monitoring the statues of the system.</p>
+<p>Each line corresponds to the outcome after an additional pass over the dataset. The first two quantities are the total time elapsed and the average logistic loss. The last quantity is a system-chosen parameter called <em>Group Number</em>. It stands for the number of groups that parallel threads are clustered into. The parallelization strategy of Splash clusters the parallel threads into groups before aggregating their updates. Although this implementation detail is hidden from the user, the group number is helpful in monitoring the statues of the system.</p>
 
 <p>There is another example in the package called <em>FasterLogisticRegression</em>. It is an alternative implementation of the logistic regression update using the <strong>array interface</strong>. In this implementation, the vector is stored in an array and the update is performed by manipulating array elements. Since manipulating array is more efficient than manipulating single key-value pairs, this implementation is faster than the previous example. The user is encouraged to verify the performance improvement on their own computer.</p>
 
