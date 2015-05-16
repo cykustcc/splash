@@ -156,7 +156,7 @@ paramRdd.streamProcess(spc)</pre></div>
 
 <p>every element in the dataset is processed by the <code>evaluateLoss</code> function. The resulting losses are aggregated by the <code>reduce</code> operator. The <code>map</code> operator for parametrized RDD is different from the standard <code>map</code> in that it is granted access to not only a data element, but also the associated local and shared variables. As a concrete example, we define a function for evaluating the logistic loss:</p>
 
-<div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">evaluateLoss</span> <span class="pl-k">=</span> (<span class="pl-v">element</span>: (<span class="pl-k">Int</span>, <span class="pl-en">Array</span>[<span class="pl-k">String</span>], <span class="pl-en">Array</span>[<span class="pl-k">Double</span>]), <span class="pl-v">sharedVar</span> : <span class="pl-en">ParameterSet</span>,  <span class="pl-v">localVar</span>: <span class="pl-en">ParameterSet</span> ) <span class="pl-k">=&gt;</span> {
+<div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">evaluateLoss</span> <span class="pl-k">=</span> (<span class="pl-v">element</span>: (<span class="pl-k">Int</span>, <span class="pl-en">Array</span>[<span class="pl-k">String</span>], <span class="pl-en">Array</span>[<span class="pl-k">Double</span>]), <span class="pl-v">sharedVar</span> : <span class="pl-en">SharedVariableSet</span>,  <span class="pl-v">localVar</span>: <span class="pl-en">LocalVariableSet</span> ) <span class="pl-k">=&gt;</span> {
   <span class="pl-k">val</span> <span class="pl-en">y</span> <span class="pl-k">=</span> element._1
   <span class="pl-k">val</span> <span class="pl-en">x_key</span> <span class="pl-k">=</span> element._2
   <span class="pl-k">val</span> <span class="pl-en">x_value</span> <span class="pl-k">=</span> element._3
@@ -173,33 +173,34 @@ paramRdd.streamProcess(spc)</pre></div>
 <h2>
 <a id="try-logistic-regression-example" class="anchor" href="#try-logistic-regression-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Try Logistic Regression Example</h2>
 
-<p>To run the logistic regression example (with stochastic gradient descent), download the <a href="https://github.com/zhangyuc/splash/blob/master/examples/SplashExample.tar.gz?raw=true">Splash example</a> and extract it at any directory. The Splash library is included in the package, so you don't have to download it again. To run the code, <code>cd</code> into that directory, then compile the code by typing:</p>
+<p>To run the logistic regression example (with stochastic gradient descent), download the <a href="https://github.com/zhangyuc/splash/blob/master/examples/SplashExample.tar.gz?raw=true">Splash Example package</a> and extract it at any directory. The Splash library is included in the package, so you don't have to download it again. To run the code, <code>cd</code> into that directory, then compile the code by typing:</p>
 
 <pre><code>sbt package
 </code></pre>
 
-<p>It generates a jar file at <code>./target/scala-2.10/simpleapp_2.10-1.0.jar</code>. We submit this jar file as a Spark job by typing</p>
+<p>It generates a jar file at <code>./target/scala-2.10/splashexample_2.10-1.0.jar</code>. We submit this jar file as a Spark job by typing</p>
 
-<pre><code>YOUR_SPARK_HOME/bin/spark-submit --class "SimpleApp" \
+<pre><code>*YOUR_SPARK_HOME*/bin/spark-submit --class *ExampleName* \
 --driver-memory 4G \
---jars lib/splash_2.10-0.0.1.jar target/scala-2.10/simpleapp_2.10-1.0.jar \
+--jars lib/splash_2.10-0.0.1.jar target/scala-2.10/splashexample_2.10-1.0.jar \
 data/covtype.txt 20.0 &gt; output.txt
 </code></pre>
 
-<p>Here, <code>SimpleApp</code> is the class name of the logistic regrsesion app. The file <code>splash_2.10-0.0.1.jar</code> is the Splash library and <code>simpleapp_2.10-1.0.jar</code> is the compiled code to be executed. The two arguments of the app are <code>data/covtype.txt</code> and <code>20.0</code>, which stand for the location of the data file and the learning rate. The result is output to <code>output.txt</code>.</p>
+<p>Here, <code>*YOUR_SPARK_HOME*</code> should be the directory that you have installed Spark. <code>*ExampleName*</code> indicates the name of the example. To run logistic regression, set <code>*ExampleName* = LogisticRegression</code>. The file <code>splash_2.10-0.0.1.jar</code> is the Splash library and <code>splashexample_2.10-1.0.jar</code> is the compiled code to be executed. The two arguments of the app are <code>data/covtype.txt</code> and <code>20.0</code>, which stand for the location of the data file and the learning rate. The result is output to <code>output.txt</code>.</p>
 
 <p>After the algorithm terminates (it takes 100 passes over the dataset), the output should be like:</p>
 
 <pre><code>Stochastic Gradient Descent
-Time = 1.569; Loss = 0.51655464; Group Number = 8
-Time = 2.479; Loss = 0.51724066; Group Number = 8
-Time = 3.205; Loss = 0.51601006; Group Number = 8
-Time = 4.165; Loss = 0.51608476; Group Number = 8
-Time = 4.838; Loss = 0.51621126; Group Number = 8
+Dataset contains 581012 data points.
+Time = 1.737; Loss = 0.51776285; Group Number = 8
+Time = 2.718; Loss = 0.51625430; Group Number = 8
+Time = 3.505; Loss = 0.51591477; Group Number = 8
 ...
 </code></pre>
 
-<p>Each line corresponds to the outcome after an additional pass over the dataset. The three quantities are the total time elapsed, the average logistic loss and a hyper-parameter automatically chosen by the Splash executor. It stands for the number of groups in which the system cluster the parallel threads. Splash reweights elements in each group, aggregate incremental updates within the group, and average updates across groups. Although these implementation details are hidden from the user, the group number is usually helpful in monitoring the statues of the system.</p>
+<p>Each line corresponds to the outcome after an additional pass over the dataset. The first two quantities are the total time elapsed and the average logistic loss. The last quantity is a system-chosen parameter called <em>Group Number</em>. It stands for the number of groups that Splash clusters the parallel threads into. The parallelization strategy of Splash clusters the parallel threads into groups before aggregating their updates. Although this implementation detail is hidden from the user, the group number is helpful in monitoring the statues of the system.</p>
+
+<p>There is another example in the package called <em>FasterLogisticRegression</em>. It is an alternative implementation of the logistic regression update using the <strong>array interface</strong>. In this implementation, the vector is stored in an array and the update is performed by manipulating array elements. Since manipulating array is more efficient than manipulating single key-value pairs, this implementation is faster than the previous example. The user is encouraged to verify the performance improvement on their own computer.</p>
 
 <h1>
 <a id="splash-api" class="anchor" href="#splash-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Splash API</h1>
