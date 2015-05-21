@@ -46,14 +46,14 @@
 </ul>
 
 <h1>
-<a id="install-splash" class="anchor" href="#install-splash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Splash</h1>
+<a id="install-splash-v001" class="anchor" href="#install-splash-v001" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Splash v.0.0.1</h1>
 
 <p>To install Splash, you need to:</p>
 
 <ol>
 <li>Download and install <a href="http://www.scala-lang.org/index.html">scala</a>, <a href="http://www.scala-sbt.org/index.html">sbt</a> and <a href="https://spark.apache.org/">Apache Spark</a>.</li>
 <li>Download the <a href="https://github.com/zhangyuc/splash/blob/master/target/scala-2.10/splash_2.10-0.0.1.jar?raw=true">Splash jar file</a> and put it in your project classpath.</li>
-<li>Make Splash as a dependency when <a href="http://spark.apache.org/docs/1.2.1/submitting-applications.html">submitting Spark jobs</a>.</li>
+<li>Make the Splash jar file as a dependency when <a href="http://spark.apache.org/docs/1.2.1/submitting-applications.html">submitting Spark jobs</a>.</li>
 </ol>
 
 <h1>
@@ -139,7 +139,7 @@ sharedVar.add(<span class="pl-s"><span class="pl-pds">"</span>w:<span class="pl-
 <p>After setting up the processing function, the user calls <code>run</code> to start running the stochastic algorithm:</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">val</span> <span class="pl-en">spc</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">StreamProcessContext</span>
-paramRdd.streamProcess(spc)</pre></div>
+paramRdd.run(spc)</pre></div>
 
 <p>The stream process context <code>spc</code> provides interfaces to control the algorithm execution. The user can specify the number of parallel threads, the proportion of data to process per iteration, the strategy for combining parallel updates, etc. See the Splash API for more details. In this example, we use the system's default setting. In the default setting, the algorithm takes one pass over the dataset by one calling of <code>run</code>. In most machine learning applications, the user wants to call <code>run</code> multiple times to take multiple passes over the dataset, in order to obtain higher learning accuracy.</p>
 
